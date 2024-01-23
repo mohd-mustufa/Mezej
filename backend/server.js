@@ -4,6 +4,7 @@ const chats = require("./dummy_data");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+const cors = require("cors");
 
 dotenv.config();
 connectDB();
@@ -11,6 +12,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Routes
 app.get("/", (req, res) => {

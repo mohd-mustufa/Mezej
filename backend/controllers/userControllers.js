@@ -40,6 +40,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+  if (!user) throw Error("Email is incorrect");
 
   if (user && (await user.matchPassword(password))) {
     res.json({
@@ -49,6 +50,8 @@ const authUser = asyncHandler(async (req, res) => {
       pic: user.pic,
       token: generateToken(user._id),
     });
+  } else {
+    throw Error("Password is incorrect");
   }
 });
 
