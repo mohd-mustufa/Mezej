@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../../utils/constants";
 
 const Login = () => {
   const [email, setEmail] = useState();
@@ -43,7 +44,7 @@ const Login = () => {
       };
 
       const { data } = await axios.post(
-        "http://127.0.0.1:5000/api/users/login",
+        BASE_URL + "/api/users/login",
         { email, password },
         config
       );
@@ -58,7 +59,6 @@ const Login = () => {
       setLoading(false);
       navigate("/chats");
     } catch (err) {
-      console.log(err);
       toast({
         title: "Error occured",
         description: err.response.data.message,

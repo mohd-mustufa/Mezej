@@ -1,10 +1,10 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const chats = require("./dummy_data");
 const connectDB = require("./config/db");
-const userRoutes = require("./routes/userRoutes");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const cors = require("cors");
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 dotenv.config();
 connectDB();
@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+app.use("/api/chats", chatRoutes);
 
 // Error Handlers
 app.use(notFound);

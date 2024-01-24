@@ -37,6 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Validate login for a user
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -55,4 +56,26 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser };
+// Returns all the users, filters the search if query params are provided
+const getUsers = asyncHandler(async (req, res) => {
+  console.log("inside controller", req.query.search);
+  const filterObj = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  try {
+    const users = await User.find(filterObj).find({
+      _id: { $ne: req.user._id },
+    });
+    res.send(users);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+module.exports = { registerUser, authUser, getUsers };

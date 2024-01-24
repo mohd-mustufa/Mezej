@@ -12,7 +12,7 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CLOUDINARY_API_URL } from "../../utils/constants";
+import { BASE_URL, CLOUDINARY_API_URL } from "../../utils/constants";
 
 const SignUp = () => {
   const [name, setName] = useState();
@@ -104,7 +104,7 @@ const SignUp = () => {
         },
       };
       const { data } = await axios.post(
-        "http://127.0.0.1:5000/api/users/register",
+        BASE_URL + "/api/users/register",
         {
           name,
           email,
