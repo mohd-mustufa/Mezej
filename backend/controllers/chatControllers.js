@@ -53,7 +53,7 @@ const fetchAllChats = asyncHandler(async (req, res) => {
       users: { $elemMatch: { $eq: req.user._id } },
     })
       .populate("users", "-password")
-      .populate("groupAdmin", "-password")
+      .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .populate("latestMessage.sender", "name email")
       .sort({ createdAt: 1 });
@@ -88,11 +88,11 @@ const createGroupChat = asyncHandler(async (req, res) => {
       chatName: req.body.name,
       isGroupChat: true,
       users: uniqueUsers,
-      groupAdmin: req.user._id,
+      groupAdmins: [req.user._id],
     });
     const fullGroupChat = await Chat.findById(createdGroup._id)
       .populate("users", "-password")
-      .populate("groupAdmin", "-password");
+      .populate("groupAdmins", "-password");
 
     res.status(200).send(fullGroupChat);
   } catch (err) {
@@ -125,7 +125,7 @@ const renameGroup = asyncHandler(async (req, res) => {
       { new: true }
     )
       .populate("users", "-password")
-      .populate("groupAdmin", "-password");
+      .populate("groupAdmins", "-password");
 
     res.status(200).send(updatedGroup);
   } catch (err) {
@@ -171,7 +171,7 @@ const addUserToGroup = asyncHandler(async (req, res) => {
       { new: true }
     )
       .populate("users", "-password")
-      .populate("groupAdmin", "-password");
+      .populate("groupAdmins", "-password");
 
     res.status(200).send(updatedGroup);
   } catch (err) {
@@ -212,11 +212,11 @@ const removeUserFromGroup = asyncHandler(async (req, res) => {
   try {
     const updatedGroup = await Chat.findByIdAndUpdate(
       groupId,
-      { $pull: { users: userId } },
+      { $pull: { users: userId, groupAdmins: userId } },
       { new: true }
     )
       .populate("users", "-password")
-      .populate("groupAdmin", "-password");
+      .populate("groupAdmins", "-password");
 
     res.status(200).send(updatedGroup);
   } catch (err) {

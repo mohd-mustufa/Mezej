@@ -2,6 +2,15 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
 
+// Converting the name entered by the user to register to titleCase
+const titleCase = (str) => {
+  str = str.toLowerCase().split(" ");
+  for (let i = 0; i < str.length; i++) {
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+  }
+  return str.join(" ");
+};
+
 // Create a new user and store in db
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
@@ -17,8 +26,8 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
-    name,
-    email,
+    name: titleCase(name),
+    email: email.toLowerCase(),
     password,
     pic,
   });
@@ -58,7 +67,6 @@ const authUser = asyncHandler(async (req, res) => {
 
 // Returns all the users, filters the search if query params are provided
 const getUsers = asyncHandler(async (req, res) => {
-  console.log("inside controller", req.query.search);
   const filterObj = req.query.search
     ? {
         $or: [
@@ -75,6 +83,8 @@ const getUsers = asyncHandler(async (req, res) => {
     res.send(users);
   } catch (err) {
     console.log(err);
+    res.status(400);
+    throw Error(err.message);
   }
 });
 
