@@ -15,7 +15,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { BASE_URL } from "../../utils/constants";
+import {
+  BASE_URL,
+  GET_SINGLE_CHAT_URL,
+  SEARCH_USER_URL,
+} from "../../utils/constants";
 import { useChatState } from "../../context/ChatProvider";
 import ChatLoadingSkeleton from "../chat/ChatLoadingSkeleton";
 import UserListItem from "../user/UserListItem";
@@ -48,7 +52,7 @@ const SideDrawer = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        BASE_URL + `/api/users?search=${search}`,
+        BASE_URL + SEARCH_USER_URL + search,
         config
       );
       setLoading(false);
@@ -70,7 +74,7 @@ const SideDrawer = () => {
       setLoadingChat(true);
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       const { data } = await axios.post(
-        `${BASE_URL}/api/chats/${userId}`,
+        BASE_URL + GET_SINGLE_CHAT_URL + userId,
         {},
         config
       );

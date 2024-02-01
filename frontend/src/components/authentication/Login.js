@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL } from "../../utils/constants";
+import { BASE_URL, LOGIN_URL } from "../../utils/constants";
 
 const Login = () => {
   const [email, setEmail] = useState();
@@ -44,7 +44,7 @@ const Login = () => {
       };
 
       const { data } = await axios.post(
-        BASE_URL + "/api/users/login",
+        BASE_URL + LOGIN_URL,
         { email, password },
         config
       );

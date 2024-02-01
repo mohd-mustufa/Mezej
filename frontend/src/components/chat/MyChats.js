@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useChatState } from "../../context/ChatProvider";
 import { Box, Button, Stack, Text, useToast } from "@chakra-ui/react";
-import { BASE_URL } from "../../utils/constants";
+import { BASE_URL, GET_ALL_CHATS_URL } from "../../utils/constants";
 import axios from "axios";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoadingSkeleton from "./ChatLoadingSkeleton";
@@ -21,7 +21,7 @@ const MyChats = () => {
         },
       };
 
-      const { data } = await axios.get(`${BASE_URL}/api/chats`, config);
+      const { data } = await axios.get(BASE_URL + GET_ALL_CHATS_URL, config);
       setChats(data);
     } catch (err) {
       toast({
@@ -63,6 +63,7 @@ const MyChats = () => {
         <Text fontSize={{ base: "20px", sm: "24px", md: "22px", lg: "30px" }}>
           My Chats
         </Text>
+
         <Button
           p={{ base: "2", sm: "3" }}
           display="flex"

@@ -27,7 +27,7 @@ const fetchSingleChat = asyncHandler(async (req, res) => {
     res.status(200).send(chat[0]);
   } else {
     let newChat = new Chat({
-      chatName: user.name,
+      chatName: "Dummy",
       users: [userId, req.user._id],
     });
 
@@ -56,7 +56,7 @@ const fetchAllChats = asyncHandler(async (req, res) => {
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .populate("latestMessage.sender", "name email")
-      .sort({ createdAt: 1 });
+      .sort({ updatedAt: -1 });
 
     res.status(200).send(chats);
   } catch (err) {
@@ -73,7 +73,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
     res.status(400).send("Please fill all the fileds");
   }
 
-  if (req.body.users.length < 2) {
+  if (req.body.users.length < 1) {
     console.log("Cannot create group with less than 2 users");
     res.status(400).send("Cannot create group with less than 2 users");
   }
@@ -122,7 +122,7 @@ const renameGroup = asyncHandler(async (req, res) => {
     const updatedGroup = await Chat.findByIdAndUpdate(
       groupId,
       { chatName: newGroupName },
-      { new: true }
+      { new: true } // Returns the modified document rather than the original one
     )
       .populate("users", "-password")
       .populate("groupAdmins", "-password");
