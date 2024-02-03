@@ -1,7 +1,7 @@
-import { Avatar, Box, Text } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Box, Text } from "@chakra-ui/react";
 import React from "react";
 
-const UserListItem = ({ user, handleClick }) => {
+const UserListItem = ({ user, handleClick, isSelected = false }) => {
   return (
     <Box
       onClick={handleClick}
@@ -18,8 +18,11 @@ const UserListItem = ({ user, handleClick }) => {
       }}
       borderRadius="lg"
       color="black"
+      w="100%"
     >
-      <Avatar size="sm" mr={2} name={user.name} src={user.pic} />
+      <Avatar size="sm" mr={2} name={user.name} src={user.pic}>
+        {isSelected ? <AvatarBadge boxSize="1.25em" bg="green.500" /> : ""}
+      </Avatar>
       <Box>
         <Text>{user.name}</Text>
         <Text fontSize="xs">
