@@ -14,10 +14,14 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useChatState } from "../../context/ChatProvider";
 import axios from "axios";
-import { BASE_URL, SEARCH_USER_URL } from "../../utils/constants";
+import {
+  BASE_URL,
+  CREATE_GROUP_CHAT_URL,
+  SEARCH_USER_URL,
+} from "../../utils/constants";
 import UserListItem from "../user/UserListItem";
 import UserBadgeItem from "../user/UserBadgeItem";
 import debounce from "lodash.debounce";
@@ -35,7 +39,6 @@ const GroupChatModal = ({ children }) => {
 
   // Send request to search for the users that are typed in the search query
   const handleSearch = async (query) => {
-    console.log("log");
     if (!query || !query.trim()) {
       setSearchResults([]);
       return;
@@ -68,10 +71,7 @@ const GroupChatModal = ({ children }) => {
     }
   };
 
-  const handleDebouncedSearch = useCallback(
-    debounce((query) => handleSearch(query), 300),
-    []
-  );
+  const handleDebouncedSearch = debounce((query) => handleSearch(query), 300);
 
   // Adds a user to the selected users list upon single click, when the user is
   // clicked upon again, then it is removed from the list
@@ -99,7 +99,55 @@ const GroupChatModal = ({ children }) => {
     onClose();
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    if (!groupChatName || Array.from(selectedUsers).length === 0) {
+      toast({
+        title: "Please fill all the feilds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        BASE_URL + CREATE_GROUP_CHAT_URL,
+        {
+          name: groupChatName,
+          users: [...selectedUsers],
+        },
+        config
+      );
+
+      setChats((prevChats) => [data, ...prevChats]);
+      onClose();
+
+      toast({
+        title: "New Group Chat Created!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to Create the Chat!",
+        description: error.response.data,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  };
 
   return (
     <>

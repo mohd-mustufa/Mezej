@@ -12,3 +12,5 @@ export const SEARCH_USER_URL = "/api/users?search=";
 export const GET_ALL_CHATS_URL = "/api/chats";
 
 export const GET_SINGLE_CHAT_URL = "/api/chats/";
+
+export const CREATE_GROUP_CHAT_URL = "/api/chats/group/create";
