@@ -98,11 +98,17 @@ const SideDrawer = () => {
     }
   };
 
+  const handleOnClose = () => {
+    setSearch("");
+    setSearchResults([]);
+    onClose();
+  };
+
   return (
     <>
       <Header onOpen={onOpen} />
 
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+      <Drawer isOpen={isOpen} placement="left" onClose={handleOnClose}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />

@@ -13,6 +13,7 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
+  const [fetchChatsAgain, setFetchChatsAgain] = useState(false);
 
   // Redirecting to homepage if the user is not logged in
   useEffect(() => {
@@ -26,7 +27,16 @@ const ChatProvider = ({ children }) => {
 
   return (
     <ChatContext.Provider
-      value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats }}
+      value={{
+        user,
+        setUser,
+        selectedChat,
+        setSelectedChat,
+        chats,
+        setChats,
+        fetchChatsAgain,
+        setFetchChatsAgain,
+      }}
     >
       {children}
     </ChatContext.Provider>

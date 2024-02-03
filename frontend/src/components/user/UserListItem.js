@@ -13,7 +13,7 @@ const UserListItem = ({ user, handleClick, isSelected = false }) => {
       cursor="pointer"
       bg="#E8E8E8"
       _hover={{
-        background: "#38B2AC",
+        background: "#2b6cb0",
         color: "white",
       }}
       borderRadius="lg"
@@ -25,7 +25,7 @@ const UserListItem = ({ user, handleClick, isSelected = false }) => {
       </Avatar>
       <Box>
         <Text>{user.name}</Text>
-        <Text fontSize="xs">
+        <Text fontSize="13px">
           <b>Email: </b>
           {user.email}
         </Text>

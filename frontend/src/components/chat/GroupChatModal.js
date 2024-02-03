@@ -165,7 +165,7 @@ const GroupChatModal = ({ children }) => {
             Create Group Chat
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody display="flex" flexDir="column" alignItems="center">
+          <ModalBody display="flex" flexDir="column">
             <FormControl>
               <Input
                 placeholder="Enter Group Name"
@@ -193,13 +193,7 @@ const GroupChatModal = ({ children }) => {
             </Box>
 
             {/* Displays the users that were returned after search*/}
-            <Box
-              w="100%"
-              overflow="scroll"
-              maxH="250px"
-              textAlign="center"
-              pt={1}
-            >
+            <Box w="100%" overflow="scroll" maxH="250px" pt={1}>
               {loading ? (
                 <Spinner />
               ) : (
