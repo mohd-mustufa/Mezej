@@ -34,7 +34,7 @@ const GroupChatModal = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user, chats, setChats } = useChatState();
+  const { user, setChats } = useChatState();
   const toast = useToast();
 
   // Send request to search for the users that are typed in the search query
