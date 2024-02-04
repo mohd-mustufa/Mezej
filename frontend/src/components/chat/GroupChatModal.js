@@ -92,13 +92,6 @@ const GroupChatModal = ({ children }) => {
     setSelectedUsers(newSet);
   };
 
-  // Reset the search results and selected users when the modal is closed
-  const handleOnClose = () => {
-    setSelectedUsers(new Set());
-    setSearchResults([]);
-    onClose();
-  };
-
   const handleSubmit = async () => {
     if (!groupChatName || Array.from(selectedUsers).length === 0) {
       toast({
@@ -128,6 +121,8 @@ const GroupChatModal = ({ children }) => {
       );
 
       setChats((prevChats) => [data, ...prevChats]);
+      setSelectedUsers(new Set());
+      setSearchResults([]);
       onClose();
 
       toast({
@@ -147,6 +142,13 @@ const GroupChatModal = ({ children }) => {
         position: "bottom",
       });
     }
+  };
+
+  // Reset the search results and selected users when the modal is closed
+  const handleOnClose = () => {
+    setSelectedUsers(new Set());
+    setSearchResults([]);
+    onClose();
   };
 
   return (
@@ -182,7 +184,13 @@ const GroupChatModal = ({ children }) => {
             </FormControl>
 
             {/*Displays the users that are selected to be added in the group*/}
-            <Box display="flex" flexWrap="wrap">
+            <Box
+              display="flex"
+              flexWrap="wrap"
+              w="100%"
+              overflow="scroll"
+              maxH="150px"
+            >
               {Array.from(selectedUsers).map((u) => (
                 <UserBadgeItem
                   key={u._id}

@@ -118,6 +118,12 @@ const renameGroup = asyncHandler(async (req, res) => {
     throw Error("Group does not exist");
   }
 
+  if (group.chatName === newGroupName) {
+    console.log("New group name same as old group name");
+    res.status(400).send("New group name same as old group name");
+    throw Error("New group name same as old group name");
+  }
+
   try {
     const updatedGroup = await Chat.findByIdAndUpdate(
       groupId,
