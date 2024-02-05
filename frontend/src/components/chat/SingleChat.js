@@ -136,7 +136,7 @@ const SingleChat = () => {
             h="100%"
             borderRadius="lg"
             p={3}
-            overflowY="scroll"
+            overflowY="auto"
           >
             {loading ? (
               <Spinner
@@ -147,9 +147,15 @@ const SingleChat = () => {
                 size="xl"
               />
             ) : (
-              <>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  overflowY: "scroll",
+                }}
+              >
                 <ScrollableChat messages={messages} />
-              </>
+              </div>
             )}
 
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>

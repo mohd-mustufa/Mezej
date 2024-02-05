@@ -19,7 +19,7 @@ export const isSameUser = (messageList, currentMessage, ind) => {
 };
 
 export const getMarginLeft = (messageList, currentMessage, ind, userId) => {
-  if (currentMessage.sender._id === userId) return "0px";
+  if (currentMessage.sender._id === userId) return "auto";
 
   if (isNextSenderDifferent(messageList, currentMessage, ind, userId)) {
     return "0px";
