@@ -16,11 +16,16 @@ import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import axios from "axios";
 import { BASE_URL, MESSAGE_URL } from "../../utils/constants";
 import ScrollableChat from "./ScrollableChat";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:5000";
+let socket, selectedChatCompare;
 
 const SingleChat = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [socketConnected, setSocketConnected] = useState(false);
   const toast = useToast();
   const { user, selectedChat, setSelectedChat } = useChatState();
 
@@ -41,6 +46,7 @@ const SingleChat = () => {
 
       setMessages(data);
       setLoading(false);
+      socket.emit("join chat", selectedChat._id);
     } catch (err) {
       toast({
         title: "Error Occured!",
@@ -74,6 +80,7 @@ const SingleChat = () => {
           config
         );
 
+        socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (err) {
         toast({
@@ -93,8 +100,30 @@ const SingleChat = () => {
   };
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
+  }, []);
+
+  useEffect(() => {
     fetchAllMessages();
+
+    selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageData) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageData.chat._id
+      ) {
+        // notif
+      } else {
+        setMessages([...messages, newMessageData]);
+      }
+    });
+  });
 
   return (
     <>
