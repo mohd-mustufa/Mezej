@@ -19,13 +19,15 @@ import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 
 const ENDPOINT = "http://localhost:5000";
-let socket, selectedChatCompare;
+let socket, selectedChatCompare, timeout;
 
 const SingleChat = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [socketConnected, setSocketConnected] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [typing, setTyping] = useState(false);
   const toast = useToast();
   const { user, selectedChat, setSelectedChat } = useChatState();
 
@@ -80,6 +82,7 @@ const SingleChat = () => {
           config
         );
 
+        socket.emit("stop typing", selectedChat._id);
         socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (err) {
@@ -97,6 +100,24 @@ const SingleChat = () => {
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
+
+    if (!socketConnected) return;
+
+    if (!isTyping) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+
+    const lastTypingTime = new Date().getTime();
+    const delay = 2000;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      const currentTime = new Date().getTime();
+      if (typing && currentTime - lastTypingTime >= delay) {
+        setTyping(false);
+        socket.emit("stop typing", selectedChat._id);
+      }
+    }, delay);
   };
 
   useEffect(() => {
@@ -104,6 +125,8 @@ const SingleChat = () => {
 
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
   }, []);
 
   useEffect(() => {
@@ -188,6 +211,7 @@ const SingleChat = () => {
             )}
 
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+              {isTyping && <> Typing...</>}
               <Input
                 placeholder="Enter a message..."
                 background="#e0e0e0"
