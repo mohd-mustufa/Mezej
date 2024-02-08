@@ -6,6 +6,7 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const path = require("path");
 
 dotenv.config();
 connectDB();
@@ -16,13 +17,27 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Welcome to Mezej");
-});
-
 app.use("/api/users", userRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/messages", messageRoutes);
+
+// --------------------------deployment------------------------------
+
+const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  console.log(__dirname1);
+  app.use(express.static(path.join(__dirname1, "/frontend/build")));
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("Welcome to Mezej");
+  });
+}
+
+// --------------------------deployment------------------------------
 
 // Error Handlers
 app.use(notFound);
