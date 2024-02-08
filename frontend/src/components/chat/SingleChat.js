@@ -18,7 +18,7 @@ import { BASE_URL, MESSAGE_URL } from "../../utils/constants";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://mezej.onrender.com";
 let socket, selectedChatCompare, timeout;
 
 const SingleChat = () => {

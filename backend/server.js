@@ -50,7 +50,7 @@ const server = app.listen(PORT, () =>
 
 const io = require("socket.io")(server, {
   pingTimeout: 1000000,
-  cors: { origin: "http://localhost:3000" },
+  cors: { origin: "https://mezej.onrender.com/" },
 });
 
 io.on("connection", (socket) => {
